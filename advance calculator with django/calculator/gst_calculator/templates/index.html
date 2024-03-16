@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Advanced Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center; /* Center align the container */
+      background-color: skyblue; /* Set the background color to sky blue */
+    }
+    .container {
+      max-width: 1000px; /* Adjust the max-width if needed */
+      margin: 0 auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      background-color: orange; /* Set the background color of the container to orange */
+    }
+    .calculator-container {
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 20px;
+      background-color: skyblue; /* Set the background color of the calculator section to sky blue */
+      padding: 20px; /* Add padding to the calculator section */
+      border-radius: 5px; /* Add border radius to the calculator section */
+    }
+    .calculator {
+      width: 45%;
+    }
+    .calculator-section {
+      margin-bottom: 20px;
+    }
+    .calculator-divider {
+      border-bottom: 1px solid #ccc;
+      margin: 20px 0;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+    input[type="number"] {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    p {
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Advanced Calculator</h1>
+
+    <div class="calculator-switch">
+      <label for="calculator-toggle">Choose Calculator:</label>
+      <select id="calculator-toggle" onchange="toggleCalculator()">
+        <option value="normal">Normal Calculator</option>
+        <option value="gst">GST Calculator</option>
+      </select>
+    </div>
+
+    <div class="calculator-container">
+      <div class="calculator" id="normalCalculator">
+        <h2>Normal Calculator</h2>
+        <div class="calculator-section">
+          <label for="num1">Enter 1st Number:</label>
+          <input type="number" id="num1" placeholder="Enter first number">
+          <label for="operator">Operator:</label>
+          <select id="operator">
+            <option value="+">+</option>
+            <option value="-">-</option>
+            <option value="*">*</option>
+            <option value="/">/</option>
+          </select>
+          <label for="num2">Enter 2nd Number:</label>
+          <input type="number" id="num2" placeholder="Enter second number">
+          <button onclick="calculateNormal()">Calculate</button>
+          <p id="normalResult"></p>
+        </div>
+      </div>
+
+      <div class="calculator" id="gstCalculator" style="display: none;">
+        <h2>GST Calculator</h2>
+        <div class="calculator-section">
+          <label for="amount">Amount (before tax):</label>
+          <input type="number" id="amount" placeholder="Enter amount">
+          <label for="gstRate">GST Rate (%):</label>
+          <input type="number" id="gstRate" placeholder="Enter GST rate">
+          <button onclick="calculateGST()">Calculate</button>
+          <p id="sgstAmount"></p>
+          <p id="cgstAmount"></p>
+          <p id="totalAmount"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function toggleCalculator() {
+      var calculatorToggle = document.getElementById('calculator-toggle').value;
+      if (calculatorToggle === 'normal') {
+        document.getElementById('normalCalculator').style.display = 'block';
+        document.getElementById('gstCalculator').style.display = 'none';
+      } else if (calculatorToggle === 'gst') {
+        document.getElementById('normalCalculator').style.display = 'none';
+        document.getElementById('gstCalculator').style.display = 'block';
+      }
+    }
+
+    function calculateNormal() {
+      var num1 = parseFloat(document.getElementById('num1').value);
+      var num2 = parseFloat(document.getElementById('num2').value);
+      var operator = document.getElementById('operator').value;
+
+      if (isNaN(num1) || isNaN(num2)) {
+        alert('Please enter valid numbers');
+        return;
+      }
+
+      var result;
+      switch(operator) {
+        case '+':
+          result = num1 + num2;
+          break;
+        case '-':
+          result = num1 - num2;
+          break;
+        case '*':
+          result = num1 * num2; // Fix the multiplication operation
+          break;
+        case '/':
+          if(num2 === 0) {
+            alert('Cannot divide by zero');
+            return;
+          }
+          result = num1 / num2;
+          break;
+        default:
+          alert('Invalid operator');
+          return;
+      }
+
+      document.getElementById('normalResult').innerHTML = "Result: " + result.toFixed(2);
+    }
+
+    function calculateGST() {
+      var amount = parseFloat(document.getElementById('amount').value);
+      var gstRate = parseFloat(document.getElementById('gstRate').value);
+
+      if (isNaN(amount) || isNaN(gstRate)) {
+        alert('Please enter valid numbers');
+        return;
+      }
+
+      var sgstAmount = (amount * gstRate) / 200;
+      var cgstAmount = sgstAmount;
+      var totalAmount = amount + sgstAmount + cgstAmount;
+
+      document.getElementById('sgstAmount').innerHTML = "SGST Amount: ₹" + sgstAmount.toFixed(2);
+      document.getElementById('cgstAmount').innerHTML = "CGST Amount: ₹" + cgstAmount.toFixed(2);
+      document.getElementById('totalAmount').innerHTML = "Total Amount (including GST): ₹" + totalAmount.toFixed(2);
+    }
+  </script>
+
+</body>
+</html>
